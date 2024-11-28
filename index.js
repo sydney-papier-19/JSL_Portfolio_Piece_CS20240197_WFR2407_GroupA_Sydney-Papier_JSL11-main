@@ -128,7 +128,7 @@ function refreshTasksUI() {
 // Styles the active board by adding an active class
 // TASK: Fix Bugs
 function styleActiveBoard(boardName) {
-  document.querySelectorAll('.board-btn').foreach(btn => { 
+  document.querySelectorAll('.board-btn').forEach(btn => { 
     
     if(btn.textContent === boardName) {
       btn.classList.add('active') 
@@ -191,7 +191,7 @@ function setupEventListeners() {
   elements.themeSwitch.addEventListener('change', toggleTheme);
 
   // Show Add New Task Modal event listener
-  elements.addNewTaskBtn.addEventListener('click', () => {
+  elements.createTaskBtn.addEventListener('click', () => {
     toggleModal(true);
     elements.filterDiv.style.display = 'block'; // Also show the filter overlay
   });
@@ -201,6 +201,12 @@ function setupEventListeners() {
     addTask(event)
   });
 }
+
+// event listener for the 'Add New Task' button
+elements.addNewTaskBtn.addEventListener('click', () => {
+  toggleModal(true);
+  elements.filterDiv.style.display = 'block'; // Also show the filter overlay
+});
 
 // Toggles tasks modal
 // Task: Fix bugs
@@ -217,7 +223,11 @@ function addTask(event) {
 
   //Assign user input to the task object
     const task = {
-      
+      title: elements.titleInput.value,
+      description: elements.descInput.value,
+      status: elements.statusInput.value,
+      board: activeBoard,
+      id: Date.now(),
     };
     const newTask = createNewTask(task);
     if (newTask) {
