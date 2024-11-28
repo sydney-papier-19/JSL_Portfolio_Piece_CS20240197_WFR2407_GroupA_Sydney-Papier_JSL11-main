@@ -36,7 +36,7 @@ const elements = {
   statusInput: document.getElementById("select-status"),
   createTaskBtn: document.getElementById("create-task-btn"),
   cancelAddTaskBtn: document.getElementById("cancel-add-task-btn"),
-  editTaskModal: document.getElementsByClassName("edit-task-modal-window")[0],
+  editTaskModal: document.getElementsByClassName("edit-task-modal-window"),
   editTaskTitleInput: document.getElementById("edit-task-title-input"),
   editTaskDescInput: document.getElementById("edit-task-desc-input"),
   editSelectStatus: document.getElementById("edit-select-status"),
@@ -57,7 +57,7 @@ function fetchAndDisplayBoardsAndTasks() {
   displayBoards(boards);
   if (boards.length > 0) {
     const localStorageBoard = JSON.parse(localStorage.getItem("activeBoard"))
-    activeBoard = localStorageBoard ? localStorageBoard :  boards[0]; 
+    activeBoard = localStorageBoard ||  boards[0]; //
     elements.headerBoardName.textContent = activeBoard
     styleActiveBoard(activeBoard)
     refreshTasksUI();
@@ -89,7 +89,7 @@ function displayBoards(boards) {
 // TASK: Fix Bugs
 function filterAndDisplayTasksByBoard(boardName) {
   const tasks = getTasks(); // Fetch tasks from a simulated local storage function
-  const filteredTasks = tasks.filter(task => task.board = boardName);
+  const filteredTasks = tasks.filter(task => task.board === boardName);
 
   // Ensure the column titles are set outside of this function or correctly initialized before this function runs
 
@@ -104,7 +104,7 @@ function filterAndDisplayTasksByBoard(boardName) {
     const tasksContainer = document.createElement("div");
     column.appendChild(tasksContainer);
 
-    filteredTasks.filter(task => task.status = status).forEach(task => { 
+    filteredTasks.filter(task => task.status === status).forEach(task => { 
       const taskElement = document.createElement("div");
       taskElement.classList.add("task-div");
       taskElement.textContent = task.title;
