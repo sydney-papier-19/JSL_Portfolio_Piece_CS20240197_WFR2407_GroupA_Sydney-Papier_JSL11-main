@@ -241,7 +241,9 @@ function addTask(event) {
 
 
 function toggleSidebar(show) {
- 
+  elements.showSideBarBtn.style.display = show ? "none" : "block";
+  elements.sideBar.style.display = show ? "block" : "none";
+  localStorage.setItem('showSideBar', show.toString());
 }
 
 function toggleTheme() {
