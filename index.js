@@ -1,5 +1,7 @@
-// TASK: import helper functions from utils
-// TASK: import initialData
+// Import helper functions from utils
+import { getTasks, createNewTask, putTask, deleteTask } from './utils/taskFunctions.js';
+// Import initialData
+import { initialData } from './initialData.js';
 
 
 /*************************************************************************************************************************************************
@@ -18,8 +20,32 @@ function initializeData() {
 
 // TASK: Get elements from the DOM
 const elements = {
+  sideBar: document.getElementById("side-bar-div"),
+  logo: document.getElementById("logo"),
+  headerBoardName: document.getElementById("header-board-name"),
+  editBoardBtn: document.getElementById("edit-board-btn"),
+  editBoardDiv: document.getElementById("editBoardDiv"),
+  columnDivs: document.querySelectorAll(".column-div"),
+  hideSideBarBtn: document.getElementById("hide-side-bar-btn"),
+  showSideBarBtn: document.getElementById("show-side-bar-btn"),
+  themeSwitch: document.getElementById("switch"),
+  addNewTaskBtn: document.getElementById("add-new-task-btn"),
+  modalWindow: document.getElementById("new-task-modal-window"),
+  titleInput: document.getElementById("title-input"),
+  descInput: document.getElementById("desc-input"),
+  statusInput: document.getElementById("select-status"),
+  createTaskBtn: document.getElementById("create-task-btn"),
+  cancelAddTaskBtn: document.getElementById("cancel-add-task-btn"),
+  editTaskModal: document.getElementsByClassName("edit-task-modal-window")[0],
+  editTaskTitleInput: document.getElementById("edit-task-title-input"),
+  editTaskDescInput: document.getElementById("edit-task-desc-input"),
+  editSelectStatus: document.getElementById("edit-select-status"),
+  filterDiv: document.getElementById("filterDiv"),
+  saveTaskChangesBtn: document.getElementById("save-task-changes-btn"),
+  deleteTaskBtn: document.getElementById("delete-task-btn"),
+};
 
-}
+
 
 let activeBoard = ""
 
@@ -252,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function init() {
+  initializeData();
   setupEventListeners();
   const showSidebar = localStorage.getItem('showSideBar') === 'true';
   toggleSidebar(showSidebar);
