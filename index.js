@@ -41,6 +41,7 @@ const elements = {
   editTaskTitleInput: document.getElementById("edit-task-title-input"),
   editTaskDescInput: document.getElementById("edit-task-desc-input"),
   editSelectStatus: document.getElementById("edit-select-status"),
+  cancelEditBtn : document.getElementById("cancel-edit-btn"),
   filterDiv: document.getElementById("filterDiv"),
   saveTaskChangesBtn: document.getElementById("save-task-changes-btn"),
   deleteTaskBtn: document.getElementById("delete-task-btn"),
@@ -169,8 +170,8 @@ function addTaskToUI(task) {
 
 function setupEventListeners() {
   // Cancel editing task click event listener
-  const cancelEditBtn = elements.cancelAddTaskBtn;
-  cancelEditBtn.addEventListener("click",() => toggleModal(false, elements.editTaskModal));
+  // const cancelEditBtn = elements.cancelAddTaskBtn;
+  elements.cancelEditBtn.addEventListener('click', () => toggleModal(false, elements.editTaskModal));
 
   // Cancel adding new task click event listener
   const cancelAddTaskBtn = document.getElementById('cancel-add-task-btn');
@@ -318,7 +319,7 @@ function saveTaskChanges(taskId) {
   };
 
   // Update task using a helper function, pushTask, to localStorage
-  putTask(taskId, updatedTask);
+  putTask(taskId, updatedTasks);
   // Close the modal and refresh the UI to reflect the changes
   toggleModal(false, elements.editTaskModal);
   refreshTasksUI();
