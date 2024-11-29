@@ -104,7 +104,7 @@ function filterAndDisplayTasksByBoard(boardName) {
     const tasksContainer = document.createElement("div");
     column.appendChild(tasksContainer);
 
-    Object.values(filteredTasks).filter(task => task.status === status).forEach(task => { 
+    filteredTasks.filter(task => task.status === status).forEach(task => { 
       const taskElement = document.createElement("div");
       taskElement.classList.add("task-div");
       taskElement.textContent = task.title;
@@ -174,13 +174,13 @@ function setupEventListeners() {
   const cancelAddTaskBtn = document.getElementById('cancel-add-task-btn');
   cancelAddTaskBtn.addEventListener('click', () => {
     toggleModal(false);
-    document.getElementById("filterDiv").style.display = "none"; // Also hide the filter overlay
+    elements.filterDiv.style.display = "none"; // Also hide the filter overlay
   });
 
   // Clicking outside the modal to close it
   elements.filterDiv.addEventListener('click', () => {
     toggleModal(false);
-    document.getElementById("filterDiv").style.display = "none"; // Also hide the filter overlay
+    elements.filterDiv.style.display = "none"; // Also hide the filter overlay
   });
 
   // Show sidebar event listener
@@ -190,11 +190,11 @@ function setupEventListeners() {
   // Theme switch event listener
   elements.themeSwitch.addEventListener('change', toggleTheme);
 
-  // Show Add New Task Modal event listener
-  elements.createTaskBtn.addEventListener('click', () => {
-    toggleModal(true);
-    document.getElementById("filterDiv").style.display = "block"; // Also show the filter overlay
-  });
+  // // Show Add New Task Modal event listener
+  // elements.createTaskBtn.addEventListener('click', () => {
+  //   toggleModal(true);
+  //   elements.filterDiv.style.display = "block"; // Also show the filter overlay
+  // });
 
   // Add new task form submission event listener
   elements.modalWindow.addEventListener('submit',  (event) => {
@@ -203,8 +203,24 @@ function setupEventListeners() {
   // event listener for the 'Add New Task' button
 elements.addNewTaskBtn.addEventListener('click', () => {
   toggleModal(true);
-  document.getElementById("filterDiv").style.display ="block"; // Also show the filter overlay
+  elements.filterDiv.style.display ="block"; // Also show the filter overlay
 });
+
+
+  // Call saveTaskChanges upon click of Save Changes button
+  elements.saveTaskChangesBtn.addEventListener('click', () => { // Corredcted eventListener
+    if (currentTaskId) {
+      saveTaskChanges(currentTaskId);  // Pass the current task ID
+    }
+  });
+
+  // Delete task using a helper function and close the task modal
+  elements.deleteTaskBtn.addEventListener('click', () => {
+    if (currentTaskId) {
+      deleteTask(currentTaskId);
+      refreshTasksUI();
+      toggleModal(false, elements.editTaskModal);
+    }});
 
 }
 // Toggles tasks modal
@@ -235,7 +251,7 @@ function addTask(event) {
     if (newTask) {
       addTaskToUI(newTask);
       toggleModal(false);
-      document.getElementById("filterDiv").style.display = "none"; // Also hide the filter overlay
+      elements.filterDiv.style.display = 'none'; // Also hide the filter overlay
       event.target.reset();
       refreshTasksUI();
     }
@@ -249,7 +265,27 @@ function toggleSidebar(show) {
 }
 
 function toggleTheme() {
- 
+  const body = document.body; // Get the body element
+  const isLightTheme = body.classList.contains('light-theme'); // Check if dark mode is currently applied
+
+  if (isLightTheme) {
+    body.classList.remove('light-theme'); // Switch to dark mode
+    localStorage.setItem('ligt-theme', 'active' ); // Save the preference to local storage
+  } else {
+    body.classList.add('light-theme'); // Switch to light mode
+    localStorage.setItem('theme', 'light-theme'); // Save the preference to local storage
+  }
+// Add event listener to the theme switch checkbox
+document.getElementById('switch').addEventListener('change', toggleTheme);
+
+  // On page load, set the theme based on the user's previous preference
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light-theme') {
+      document.body.classList.add('light-theme'); // Apply dark mode if saved in local storage
+      document.getElementById('switch').checked = true; // Set the checkbox to checked for light mode
+    }
+  });
 }
 
 
@@ -263,31 +299,12 @@ function openEditTaskModal(task) {
     selectedStatus.selected = true;
   }
   // Store the current task's ID in a variable so it can be used later when saving changes or deleting the task
-  
-  currentTaskId = task.id; 
-
-  // Get button elements from the task modal
-
-
-  // Call saveTaskChanges upon click of Save Changes button
-  elements.saveTaskChangesBtn.addEventListener('click', () => { // Corredcted eventListener
-    if (currentTaskId) {
-      saveTaskChanges(currentTaskId);  // Pass the current task ID
-    }
-  });
-
-  // Delete task using a helper function and close the task modal
-  elements.deleteTaskBtn.addEventListener('click', () => {
-    if (currentTaskId) {
-      deleteTask(currentTaskId);
-      refreshTasksUI();
-      toggleModal(false, elements.editTaskModal);
-    }});
-
+  currentTaskId = task.id;
   toggleModal(true, elements.editTaskModal); // Show the edit task modal
 }
 
 function saveTaskChanges(taskId) {
+  if (!taskId) return;
   // Get new user inputs
   const updatedTasks = {
     id: taskId,
@@ -298,7 +315,7 @@ function saveTaskChanges(taskId) {
   };
 
   // Create an object with the updated task details
-  
+
   // Update task using a helper function
   putTask(taskId, updatedTask);
   // Close the modal and refresh the UI to reflect the changes
